@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-const routes = require('./controllers/stock-controllers');
+const routes = require('./controllers/stock-controller');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
