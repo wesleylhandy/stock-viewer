@@ -1,0 +1,57 @@
+{
+  "name": "stock-viewer-client",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Wesley L. Handy",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "moment": "^2.19.4",
+    "node-sass-chokidar": "0.0.3",
+    "prop-types": "^15.6.0",
+    "raf": "^3.4.0",
+    "react": "^16.2",
+    "react-dom": "^16.2",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "redux": "^3.7.2",
+    "redux-persist": "^5.4.0",
+    "shortid": "^2.2.8",
+    "socket.io": "^2.0.4"
+  },
+  "devDependencies": {
+    "babel-jest": "^21.2.0",
+    "deep-freeze": "0.0.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^21.2.1",
+    "react-scripts": "1.0.17",
+    "redux-devtools": "^3.4.1",
+    "regenerator-runtime": "^0.11.1"
+  },
+  "optionalDependencies": {
+    "fsevents": "*"
+  },
+  "scripts": {
+    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "jest --setupTestFrameworkScriptFile=raf/polyfill",
+    "eject": "react-scripts eject"
+  },
+  "babel": {
+    "presets": [
+      "env",
+      "react-app"
+    ]
+  },
+  "jest": {
+    "verbose": true,
+    "moduleNameMapper": {
+      ".+\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mock__/fileMock.js",
+      ".+\\.(css|styl|less|sass|scss|svg)$": "identity-obj-proxy"
+    }
+  },
+  "proxy": "http://localhost:3001/"
+}
