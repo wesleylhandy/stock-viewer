@@ -1,37 +1,30 @@
-import { callbackify } from 'util';
+var mongodb = require('mongodb');
 
-var MongoClient = require('mongodb').MongoClient,
-assert = require('assert');
+function StateDAO(collection) {
+    "use strict";
+    this.collection = collection;
+}
 
-function StateDAO(database) {
-"use strict";
+StateDAO.prototype.updateState = function(symbol, callback) {
+    try {
+        this.collection.insertOne(symbol)
+    } catch (err) {
+        return callback(err, null)
+    }
 
-    this.db = database;
+    callback(null, true);
+}
 
-    this.updateState = function(symbol, callback) {
-        const stateCollection = this.db.collection('state');
-        
-        try {
-            stateCollection.insertOne(symbol)
-        } catch(err){
+StateDAO.prototype.getState = function(callback) {
+
+    const cursor = this.collection.find({});
+    cursor.sort({ symbol: 1 });
+    cursor.toArray(function(err, docs) {
+        if (err) {
             return callback(err, null)
         }
-
-        callback(null, true);
-    }
-
-    this.getState = function(callback) {
-        const stateCollection = this.db.collection('state');
-
-        const cursor = stateCollection.find({});
-        cursor.sort({symbol: 1});
-        cursor.toArray(function(err, docs){
-            if(err) {
-                return callback(err, null)
-            }
-            callback(null, docs);
-        })
-    }
+        callback(null, docs);
+    })
 }
 
 module.exports.StateDAO = StateDAO;
