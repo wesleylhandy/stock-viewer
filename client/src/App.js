@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import './App.css';
+import './styles/index.css';
 
-import {getUpdatedStockList} from './utils/helpers.js';
+import Ticker from './Components/Ticker';
+import StockSelect from './Components/StockSelect';
 
 class App extends Component {
   constructor(props){
@@ -10,25 +11,9 @@ class App extends Component {
     this.state ={
       stocks: []
     }
-    this.showStocks = this.showStocks.bind(this);
-    this.getStocks = this.getStocks.bind(this);
+
   }
-  getStocks = () => {
-    getUpdatedStockList().then(response => {
-      const stocks = response.stocks;
-      this.setState({stocks})
-    }).catch(err=>console.error(err));
-  }
-  showStocks = (stocks) => {
-    return stocks.map(stock=> (
-      <li key={stock._id}>
-        <div>
-          <h3>{stock.name}</h3>
-          <h1>{stock.symbol}</h1>
-        </div>
-      </li>
-    ))
-  }
+  
   render() {
     return (
       <div className="App">
@@ -39,10 +24,11 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
-        <button onClick={this.getStocks}>Click me!</button>
-        <ul>
-          {this.showStocks(this.state.stocks)}
-        </ul>
+        <StockSelect label='Search For Stock'/>
+
+        <div className="ticker-wrap">
+          <Ticker />
+        </div>
       </div>
     );
   }
