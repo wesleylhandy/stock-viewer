@@ -33,15 +33,15 @@ io.on('connection', function(socket) {
     console.log('a user connected');
 
     //notify all but caller of new save
-    socket.on('save-event', function(article) {
+    socket.on('add-event', function(symbol) {
         console.log('Save called');
-        socket.broadcast.emit('new-save', { article });
+        socket.broadcast.emit('new-save', { symbol });
     });
 
     //notify all but caller of delete
-    socket.on('remove-event', function(article) {
+    socket.on('remove-event', function(symbol) {
         console.log('Remove called');
-        socket.broadcast.emit('new-delete', { article });
+        socket.broadcast.emit('new-delete', { symbol });
     });
 
     socket.on('disconnect', function() {
