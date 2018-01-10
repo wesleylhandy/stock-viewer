@@ -16,6 +16,7 @@
     "express-session": "^1.15.6",
     "mongodb": "^3.0.1",
     "morgan": "^1.9.0",
+    "react-select-fast-filter-options": "^0.2.3",
     "socket.io": "^2.0.4"
   },
   "devDependencies": {

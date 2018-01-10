@@ -51,14 +51,17 @@ body {
     line-height: 4rem;
     white-space: nowrap;
     padding-right: 100%;
-    -webkit-animation-iteration-count: infinite;
-    animation-iteration-count: infinite;
-    -webkit-animation-timing-function: linear;
-    animation-timing-function: linear;
+}
+
+.ticker.scrolling {
     -webkit-animation-name: ticker;
     animation-name: ticker;
-    -webkit-animation-duration: 1800s;
-    animation-duration: 1800s;
+    -webkit-animation-duration: 8000s;
+    animation-duration: 8000s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
 }
 
 .ticker__item {
@@ -94,7 +97,6 @@ body {
     0% {
         -webkit-transform: translateX(0);
         transform: translateX(0);
-        visibility: visible;
     }
     100% {
         -webkit-transform: translateX(-100%);
@@ -106,7 +108,6 @@ body {
     0% {
         -webkit-transform: translateX(0);
         transform: translateX(0);
-        visibility: visible;
     }
     100% {
         -webkit-transform: translateX(-100%);

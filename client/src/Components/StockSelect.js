@@ -3,38 +3,43 @@
 import React, {Component} from 'react';
 
 import fetch from 'isomorphic-fetch';
-import Select from 'react-select';
+import Select from 'react-virtualized-select';
+import createFilterOptions from 'react-select-fast-filter-options';
 import 'react-select/dist/react-select.css';
+import 'react-virtualized/styles.css'
+import 'react-virtualized-select/styles.css'
 
 export default class StockSelect extends Component {
   constructor(props) {
     super(props);
     this.state = {
       label: props.label,
-      backspaceRemoves: true,
-      multi: false,
-      creatable: false,
-      value: ''
+      selectValue: '',
+      options: [],
+      isLoading: true,
+      filteredOptions: []
     }
-    this.onChange = this.onChange.bind(this);
-    this.getStocks = this.getStocks.bind(this);
+    this.updateValue = this.updateValue.bind(this);
+    this.getStockData = this.getStockData.bind(this);
   }
-  onChange = value => {
-    this.setState({
-      value: value,
-    });
-  }
-  getStocks(input) {
-    if (!input) {
-      return Promise.resolve({ options: [] });
-    }
-
-    return fetch(`https://api.iextrading.com/1.0/stock/${input}/company`)
+  componentDidMount() {
+    fetch('https://api.iextrading.com/1.0/ref-data/symbols')
       .then(response => response.json())
       .then(json => {
-        console.log({json})
-        // return { options: json.companyName };
-      });
+        const options = json.map((stock, i) => {
+          return { 
+            label: `${stock.symbol} - ${stock.name}`,
+            value: stock.symbol
+          }
+        });
+
+        this.setState({options: options, isLoading: false});
+      })
+  }
+  updateValue = value => {
+    this.setState({
+      selectValue: value,
+    });
   }
 
   getStockData(value, event) {
@@ -46,14 +51,19 @@ export default class StockSelect extends Component {
   }
 
   render() {
-    const AsyncComponent = this.state.creatable
-      ? Select.AsyncCreatable
-      : Select.Async;
-
+    const options = this.state.options;
+    const filteredOptions = createFilterOptions({ options });
     return (
       <div className="section">
         <h3 className="section-heading">{this.state.label}</h3>
-        <AsyncComponent multi={this.state.multi} value={this.state.value} onChange={this.onChange} onValueClick={this.gotoUser} valueKey="id" labelKey="login" loadOptions={this.getStocks} backspaceRemoves={this.state.backspaceRemoves} />
+        <Select   
+          filterOptions={filteredOptions}
+          options={options}
+          isLoading={this.state.isLoading}
+          onChange={this.updateValue}
+          value={this.state.selectValue}
+          placeholder='Search for stock...'
+        />
       </div>
     );
   }

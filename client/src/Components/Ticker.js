@@ -7,7 +7,8 @@ export default class Ticker extends Component {
   constructor(props){
     super(props);
     this.state = {
-      symbols: []
+      symbols: [],
+      isLoading: true
     }
   }
   componentDidMount(){
@@ -17,14 +18,14 @@ export default class Ticker extends Component {
         return response.data[stock]
       })
       // console.log({symbols})
-      this.setState({symbols});
+      this.setState({symbols, isLoading: false});
     })
   }
 
   render(){
     return (
-      <div className='ticker'>
-        {this.state.symbols.map(symbol => <div className='ticker__item'><TickerItem  key={symbol.symbol} symbol={symbol} /></div>)}
+      <div className={this.state.isLoading ? 'ticker' : 'ticker scrolling'}>
+        {this.state.symbols.map(symbol => <div key={symbol.symbol} className='ticker__item'><TickerItem symbol={symbol} /></div>)}
       </div>
     )
     
