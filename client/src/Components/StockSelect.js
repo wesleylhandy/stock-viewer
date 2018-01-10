@@ -36,13 +36,14 @@ export default class StockSelect extends Component {
         this.setState({options: options, isLoading: false});
       })
   }
-  updateValue = value => {
+  updateValue = selected => {
     this.setState({
-      selectValue: value,
+      selectValue: selected
     });
+    this.props.addStock(selected.value);
   }
 
-  getStockData(value, event) {
+  getStockData(value) {
     fetch(`https://api.iextrading.com/1.0/stock/${value.symbol}/chart/1y`)
       .then(response => response.json())
       .then(json => {

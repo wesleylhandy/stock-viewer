@@ -1,9 +1,13 @@
 body {
-    padding-bottom: 5rem;
+    height: 100vh;
 }
 
 .App {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
 }
 
 .App-logo {
@@ -26,6 +30,10 @@ body {
     font-size: large;
 }
 
+main {
+    flex: 1 1 auto;
+}
+
 @keyframes App-logo-spin {
     from {
         transform: rotate(0deg);
@@ -36,8 +44,7 @@ body {
 }
 
 .ticker-wrap {
-    position: fixed;
-    bottom: 0;
+    box-sizing: border-box;
     width: 100%;
     overflow: hidden;
     height: 4rem;

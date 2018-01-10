@@ -14,11 +14,12 @@ export default class Ticker extends Component {
   componentDidMount(){
     axios.get('https://api.iextrading.com/1.0/stock/market/previous').then(response=>{
       const stocks = Object.keys(response.data);
+      let date = response.data[stocks[0]].date;
       const symbols = stocks.map(stock => {
         return response.data[stock]
       })
-      // console.log({symbols})
       this.setState({symbols, isLoading: false});
+      this.props.addPreviousSession(date);
     })
   }
 
