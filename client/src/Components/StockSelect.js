@@ -20,7 +20,6 @@ export default class StockSelect extends Component {
       filteredOptions: []
     }
     this.updateValue = this.updateValue.bind(this);
-    this.getStockData = this.getStockData.bind(this);
   }
   componentDidMount() {
     fetch('https://api.iextrading.com/1.0/ref-data/symbols')
@@ -41,14 +40,6 @@ export default class StockSelect extends Component {
       selectValue: selected
     });
     this.props.addStock(selected.value);
-  }
-
-  getStockData(value) {
-    fetch(`https://api.iextrading.com/1.0/stock/${value.symbol}/chart/1y`)
-      .then(response => response.json())
-      .then(json => {
-        console.log({json})
-      })
   }
 
   render() {
