@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Line, defaults} from 'react-chartjs-2';
+
 import moment from 'moment';
 
 defaults.global.animation = false;
@@ -11,24 +12,47 @@ export default class StockChart extends Component{
     this.state = {
       stocks: props.stocks,
       options: {
+        responsive: true,
         scales: {
           xAxes: [{
-              type: 'time',
-              unit: 'month',
-              displayFormats: {
-                month: 'MMM YYYY'
-              },
-              distribution: 'series',
-              ticks: {
-                source: 'data'
-              }
+            display: false,
+            type: 'time',
+            unit: 'day',
+            displayFormats: {
+              month: 'MMM D YYYY'
+            },
+            toolTipFormat: 'MMM D YYYY',
+            distribution: 'series',
+            bounds: 'data',
+            ticks: {
+              source: 'data'
+            },
+            scaleLabel: {
+              display: true,
+              labelString: 'Month'
+            }
           }],
           yAxes: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+            },
             ticks: {
                 suggestedMin: 5,
                 suggestedMax: 1000
             }
           }]
+        },
+        tooltips: {
+          mode: 'index',
+          axis: 'x',
+          intersect: false,
+          position: 'average',
+          callbacks : {
+            label: function(tooltipItem, data) {
+              return tooltipItem.xLabel
+            }
+          }
         }
       },
       labels: [],
@@ -36,6 +60,7 @@ export default class StockChart extends Component{
     }
     this.getStockData = this.getStockData.bind(this);
   }
+
   componentDidMount(){
     const labels = [];
     for (let i=11; i >= 0; i--){
@@ -65,17 +90,31 @@ export default class StockChart extends Component{
             y: stock.close
           }
         })
+        const labels = data.map(label => moment(label.x).format('MMMM YYYY'));
         const datasets = this.state.datasets.slice();
         const dataset = {
           label: symbol,
           data: data,
           fill: false,
-          pointBorderColor: color,
-          borderColor: color
+          lineTension: 0,
+          backgroundColor: color,
+          borderColor: color,
+          pointBorderWidth:1,
+          pointHoverRadius: 5,
+          pointRadius: 1
         }
         datasets.push(dataset);
-        this.setState({datasets})
+        this.setState({datasets, labels})
       })
+  }
+  getData(e){
+    console.log({e: e[0]})
+    if(e.length) {
+      let values = e.map(el=>{return {datasetIndex: el._index, value: el._model.y}})
+      let chart = e[0]._chart;
+      let ctx = chart.ctx;
+      console.log({values})
+    }
   }
   render() {
     const data = {
@@ -85,8 +124,7 @@ export default class StockChart extends Component{
     }
       return (
         <div>
-          <h2>Line Example</h2>
-          <Line data={data} />
+          <Line data={data} getElementsAtEvent={this.getData}/>
         </div>
       );
   }

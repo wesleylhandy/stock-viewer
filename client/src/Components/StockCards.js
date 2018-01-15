@@ -1,25 +1,41 @@
 import React, { Component } from 'react';
-import StockCard from './StockCard';
-import io from 'socket.io-client'; 
+import fetch from 'isomorphic-fetch';
 
-// const socket = io('https://ws-api.iextrading.com/1.0/tops'); 
+import StockCard from './StockCard';
 
 export default class StockCards extends Component {
   constructor(props){
     super(props);
     this.state = {
-      stocks: props.stocks
+      stocks: props.stocks,
+      stocksData: []
     }
-
-    // socket.on('message', message => console.log(message))
-      
+    this.fetchStocksData = this.fetchStocksData.bind(this);      
   }
   componentDidMount(){
-    // socket.emit('subscribe', this.props.stocks.map(stock=>stock.symbol).join())
+    this.fetchStocksData(this.props.stocks);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.stocks.join() != this.state.stocks.join()) {
+      this.fetchStocksData(nextProps.stocks)
+    }
+  }
+
+  fetchStocksData(stocks) {
+    const promises = [];
+    // console.log(stocks)
+    stocks.forEach(stock => {
+      promises.push(fetch(`https://api.iextrading.com/1.0/stock/${stock.symbol}/company`).then(response=> response.json()))
+    })
+    Promise.all(promises).then(stocksData=> {
+      // console.log({stocksData})
+      this.setState({stocksData})
+    }).catch(err=>console.error({fetchCompanyDataErr: err}))
   }
 
   render(){
-    return <div>{this.state.stocks.map((stock, i)=><StockCard key={i} symbol={stock.symbol} {...this.props}/>)}</div>
+    return <div>{this.state.stocksData.map((stock, i)=><StockCard key={i} stock={stock} {...this.props}/>)}</div>
   }
   
 }

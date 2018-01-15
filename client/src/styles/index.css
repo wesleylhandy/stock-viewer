@@ -16,6 +16,7 @@ body {
 }
 
 .App-header {
+    box-sizing: border-box;
     background-color: #222;
     height: 150px;
     padding: 20px;
@@ -32,6 +33,9 @@ body {
 
 main {
     flex: 1 1 auto;
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
 }
 
 @keyframes App-logo-spin {
