@@ -6,6 +6,10 @@ const stocks = (state = [], action) => {
                 singleStock(null, action)
             ]
         case 'REMOVE_STOCK':
+            // console.log('RemoveStockReducer', action.symbol)
+            // console.log({newState: [
+            //     ...state.filter(stock => stock.symbol !== action.symbol)
+            // ]})
             return [
                 ...state.filter(stock => stock.symbol !== action.symbol)
             ]

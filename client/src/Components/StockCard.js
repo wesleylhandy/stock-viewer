@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import fetch from 'isomorphic-fetch';
+
 import io from 'socket.io-client'; 
+const socket = io(); 
 
 export default class StockCard extends Component {
   constructor(props) {
@@ -12,6 +14,7 @@ export default class StockCard extends Component {
       stock: props.stock
     }
     this.getLatestPrice = this.getLatestPrice.bind(this)
+    this.handleRemove = this.handleRemove.bind(this)
   }
 
   componentDidMount() {
@@ -32,6 +35,16 @@ export default class StockCard extends Component {
     })
   }
 
+  handleRemove(e){
+    e.preventDefault();
+    console.log({RemoveValue: this.refs.removeBtn.value})
+    socket.emit('remove-event', {stock: this.refs.removeBtn.value});
+  }
+
+  componentWillUnmount(){
+    socket.close();
+  }
+
   render() {
     return (
       <div className='stock-card'>
@@ -42,6 +55,7 @@ export default class StockCard extends Component {
         <div className="stock-card__ceo">{this.state.stock.CEO}</div>
         <div className="stock-card__company-desc">{this.state.stock.description}</div>
         <a href={this.state.stock.website} target="_blank">{this.state.stock.website}</a>
+        <button onClick={this.handleRemove} ref='removeBtn' value={this.state.stock.symbol}>X</button>
       </div>
     )
   }

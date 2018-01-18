@@ -30,21 +30,21 @@ const server = app.listen(app.get('port'), () => {
 const io = require('socket.io')(server);
 
 io.on('connection', function(socket) {
-    console.log('a user connected');
+    console.log('component connected');
 
     //notify all but caller of new save
     socket.on('add-event', function(symbol) {
-        console.log('Save called');
-        socket.broadcast.emit('new-save', { symbol });
+        console.log('Save called', symbol);
+        socket.broadcast.emit('new-save', symbol);
     });
 
     //notify all but caller of delete
     socket.on('remove-event', function(symbol) {
-        console.log('Remove called');
-        socket.broadcast.emit('new-delete', { symbol });
+        console.log('Remove called', symbol);
+        socket.broadcast.emit('new-delete', symbol);
     });
 
     socket.on('disconnect', function() {
-        console.log('user disconnected');
+        console.log('component disconnected');
     });
 });

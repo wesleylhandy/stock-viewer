@@ -17,7 +17,10 @@ export default class StockCards extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.stocks.join() != this.state.stocks.join()) {
+    if (nextProps.stocks.length === 0) {
+      return this.setState({stocks: [], stocksData: []})
+    }
+    if (nextProps.stocks.join() !== this.state.stocks.join()) {
       this.fetchStocksData(nextProps.stocks)
     }
   }
@@ -35,7 +38,7 @@ export default class StockCards extends Component {
   }
 
   render(){
-    return <div>{this.state.stocksData.map((stock, i)=><StockCard key={i} stock={stock} {...this.props}/>)}</div>
+    return <div className='stock-cards'>{this.state.stocksData.map((stock, i)=><StockCard key={stock.symbol + i} stock={stock} {...this.props}/>)}</div>
   }
   
 }

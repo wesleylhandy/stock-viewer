@@ -73,6 +73,9 @@ export default class StockChart extends Component{
     });
   }
   componentWillReceiveProps(nextProps){
+    if(nextProps.stocks.length === 0) {
+      return this.setState({datasets: [], stocks: []})
+    }
     if(nextProps.stocks.join() !== this.state.stocks.join()) {
       this.setState({stocks: nextProps.stocks})
       nextProps.stocks.forEach(stock=>{
@@ -108,7 +111,7 @@ export default class StockChart extends Component{
       })
   }
   getData(e){
-    console.log({e: e[0]})
+    console.log({e: e})
     if(e.length) {
       let values = e.map(el=>{return {datasetIndex: el._index, value: el._model.y}})
       let chart = e[0]._chart;

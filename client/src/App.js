@@ -13,6 +13,10 @@ import StockSelect from './Components/StockSelect';
 import StockChart from './Components/StockChart';
 import StockCards from './Components/StockCards';
 
+//client side socket connection
+import io from 'socket.io-client'; 
+const socket = io();
+
 class App extends Component {
   constructor(props){
     super(props);
@@ -21,6 +25,14 @@ class App extends Component {
       previousSession: moment(props.date.previousSession, 'YYYY-MM-DD'),
       ...props
     }
+    socket.on('new-save', stock => {
+      // console.log({stock})
+      props.addStock(stock.stock)
+    });
+    socket.on('new-delete', stock => {
+      // console.log({stock})
+      props.removeStock(stock.stock)
+    });
   }
 
   componentDidMount(){
@@ -36,18 +48,15 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-
-        </header>
+        <div className="ticker-wrap">
+          <Ticker {...this.props}/>
+        </div>
+        <div>Previous Trading Session - {moment(this.state.previousSession).format('MMM Do, YYYY')}</div>
         <main>
           <StockChart {...this.props}/>
           <StockSelect label='Search For Stock' {...this.props}/>
           <StockCards {...this.props}/>
         </main>
-        <div>Previous Trading Session - {moment(this.state.previousSession).format('MMM Do, YYYY')}</div>
-        <div className="ticker-wrap">
-          <Ticker {...this.props}/>
-        </div>
       </div>
     );
   }

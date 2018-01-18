@@ -1,65 +1,62 @@
 body {
-    height: 100vh;
+    min-height: 100vh;
+    height: 100%;
 }
 
 .App {
     text-align: center;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%;
     width: 100vw;
 }
 
-.App-logo {
-    animation: App-logo-spin infinite 20s linear;
-    height: 80px;
-}
-
-.App-header {
-    box-sizing: border-box;
-    background-color: #222;
-    height: 150px;
-    padding: 20px;
-    color: white;
-}
-
-.App-title {
-    font-size: 1.5em;
-}
-
-.App-intro {
-    font-size: large;
-}
-
 main {
-    flex: 1 1 auto;
+    height: auto;
     max-width: 1200px;
     width: 90%;
     margin: 0 auto;
+    margin-top: 50px;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.Select-menu-outer {
+    z-index: 500;
+}
+
+.stock-cards {
+    box-sizing: border-box;
+    margin-top: 50px;
+    border: 1px solid #a7a7a7;
+    box-shadow: 1px 1px 5px #3c3c3c;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    flex-wrap: wrap;
+    padding: 30px;
+}
+
+.stock-card {
+    box-sizing: border-box;
+    width: 47.5%;
+}
+
+.stock-card:nth-of-type(even){
+    margin-left: 5%;
 }
 
 .ticker-wrap {
     box-sizing: border-box;
     width: 100%;
     overflow: hidden;
-    height: 4rem;
+    height: 48px;
     background-color: #CCC;
     padding-left: 100%;
 }
 
 .ticker {
     display: inline-block;
-    height: 4rem;
-    line-height: 4rem;
+    height: 48px;
+    line-height: 48px;
     white-space: nowrap;
     padding-right: 100%;
 }
@@ -77,8 +74,8 @@ main {
 
 .ticker__item {
     display: inline-block;
-    padding: 0 2rem;
-    font-size: 2rem;
+    padding: 0 24px;
+    font-size: 24px;
     color: black;
 }
 
