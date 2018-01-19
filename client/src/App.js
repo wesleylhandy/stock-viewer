@@ -13,6 +13,8 @@ import StockSelect from './Components/StockSelect';
 import StockChart from './Components/StockChart';
 import StockCards from './Components/StockCards';
 
+import { getState } from './utils/helpers'
+
 //client side socket connection
 import io from 'socket.io-client'; 
 const socket = io();
@@ -37,6 +39,10 @@ class App extends Component {
 
   componentDidMount(){
     this.props.addCurrentDate(moment())
+    getState().then(response=>{
+      const symbols = response.symbols;
+      this.props.updateStocks(symbols);
+    }).catch(err=>console.error(err))
   }
 
   componentWillReceiveProps(nextProps) {

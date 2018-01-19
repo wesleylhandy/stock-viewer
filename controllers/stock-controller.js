@@ -69,8 +69,18 @@ module.exports = function(app) {
             })
         });
 
-        router.post('/state/add/:symbol', function(req, res) {
-            appState.updateState(req.param.symbol, function(err, success) {
+        router.post('/state/add/', function(req, res) {
+            appState.addToState(req.body.symbol, function(err, success) {
+                if (err) {
+                    res.statusCode = 503;
+                    return res.json({ getStateError: err })
+                }
+                res.status(200).send(true);
+            })
+        })
+
+        router.put('/state/remove/', function(req, res) {
+            appState.removeFromState(req.body.symbol, function(err, success) {
                 if (err) {
                     res.statusCode = 503;
                     return res.json({ getStateError: err })
@@ -80,23 +90,13 @@ module.exports = function(app) {
         })
 
         router.get('/state/all', function(req, res) {
-            appState.getState(function(err, symbols) {
+            appState.getState(function(err, docs) {
                 if (err) {
                     res.statusCode = 503;
                     return res.json({ getStateError: err })
                 }
-                const promises = [];
-                symbols.forEach(function(symbol) {
-                    promises.push(axios.get(`https://api.iextrading.com/1.0/stock/${symbol.symbol}/chart/1y`).then(function(chart) {
-                        return Promise.resolve({ symbol, chart })
-                    }))
-                });
-                Promise.all(promises).then(function(symbols) {
-                    res.json({ symbols });
-                }).catch(function(err) {
-                    res.statusCode = 500;
-                    res.json({ iexApiError: err })
-                })
+                const symbols = docs.map(doc => doc.symbol);
+                res.json({ symbols })
             })
         })
 

@@ -9,6 +9,8 @@ import 'react-select/dist/react-select.css';
 import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css';
 
+import { addSymbolToState } from '../utils/helpers'
+
 import io from 'socket.io-client'; 
 const socket = io(); 
 
@@ -43,7 +45,10 @@ export default class StockSelect extends Component {
       selectValue: selected
     });
     if(selected.hasOwnProperty('value') && selected.value) {
-      socket.emit('add-event', {stock: selected.value})
+      const symbol = selected.value;
+      addSymbolToState(symbol).then(response=>{
+        socket.emit('add-event', {stock: symbol})
+      }).catch(err=>console.error(err));
     }
   }
 

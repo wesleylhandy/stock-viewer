@@ -12,9 +12,16 @@ export const removeStock = symbol => {
     }
 }
 
+export const updateStocks = symbols => {
+    return {
+        type: 'UPDATE_STOCKS',
+        symbols
+    }
+}
+
 export const updateStockData = (symbol, data) => {
     return {
-        type: 'REMOVE_STOCK',
+        type: 'UPDATE_STOCK_DATA',
         symbol,
         data
     }

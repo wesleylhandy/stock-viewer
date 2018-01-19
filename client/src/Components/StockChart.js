@@ -78,8 +78,9 @@ export default class StockChart extends Component{
     }
     if(nextProps.stocks.join() !== this.state.stocks.join()) {
       this.setState({stocks: nextProps.stocks})
-      nextProps.stocks.forEach(stock=>{
-        this.getStockData(stock.symbol)
+      nextProps.stocks.forEach((stock, ind, arr)=>{
+        const color = `hsla(${((360 / arr.length) * ind) + 20}, 100%, 45%, 0.9)`
+        this.getStockData(stock.symbol, color)
       });
     }
   }
