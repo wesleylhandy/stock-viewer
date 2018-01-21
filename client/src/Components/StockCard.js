@@ -21,12 +21,12 @@ export default class StockCard extends Component {
     this.getLatestPrice(this.props.stock.symbol)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.symbol !== this.state.stock.symbol) {
-      this.setState({stock: nextProps.stock})
-      this.getLatestPrice(nextProps.stock.symbol)
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if(nextProps.symbol !== this.state.stock.symbol) {
+  //     this.setState({stock: nextProps.stock})
+  //     this.getLatestPrice(nextProps.stock.symbol)
+  //   }
+  // }
 
   getLatestPrice(symbol){
     // console.log(symbol)
@@ -41,9 +41,9 @@ export default class StockCard extends Component {
     socket.emit('remove-event', {stock: this.refs.removeBtn.value});
   }
 
-  componentWillUnmount(){
-    socket.close();
-  }
+  // componentWillUnmount(){
+  //   socket.close();
+  // }
 
   render() {
     return (

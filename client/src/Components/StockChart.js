@@ -76,10 +76,11 @@ export default class StockChart extends Component{
     if(nextProps.stocks.length === 0) {
       return this.setState({datasets: [], stocks: []})
     }
-    if(nextProps.stocks.join() !== this.state.stocks.join()) {
-      this.setState({stocks: nextProps.stocks})
-      nextProps.stocks.forEach(stock=>{
-        this.getStockData(stock.symbol)
+    if(nextProps.stocks.join() !== this.state.stocks.join() || nextProps.stocks.length !== this.state.stocks.length) {
+      this.setState({stocks: nextProps.stocks, datasets: []})
+      nextProps.stocks.forEach((stock, ind, arr)=>{
+        const color = `hsla(${((360 / arr.length) * ind) + 20}, 100%, 45%, 0.9)`
+        this.getStockData(stock.symbol, color)
       });
     }
   }
