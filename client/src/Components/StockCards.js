@@ -38,7 +38,7 @@ export default class StockCards extends Component {
   }
 
   render(){
-    return <div className='stock-cards'>{this.state.stocksData.map((stock, i)=><StockCard key={`card-${stock.symbol}`} stock={stock} {...this.props}/>)}</div>
+    return <div className='stock-cards'>{this.state.stocksData.map((stock, i)=><StockCard key={`card-${i}-${stock.symbol}`} stock={stock} {...this.props}/>)}</div>
   }
   
 }

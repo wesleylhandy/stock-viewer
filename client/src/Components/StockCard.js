@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import fetch from 'isomorphic-fetch';
 
+import { removeSymbolFromState } from '../utils/helpers'
+
 import io from 'socket.io-client'; 
 const socket = io(); 
 
@@ -37,8 +39,12 @@ export default class StockCard extends Component {
 
   handleRemove(e){
     e.preventDefault();
-    console.log({RemoveValue: this.refs.removeBtn.value})
-    socket.emit('remove-event', {stock: this.refs.removeBtn.value});
+    // console.log({RemoveValue: this.refs.removeBtn.value})
+    const symbol = this.refs.removeBtn.value;
+    // update state in db, tell other clients to remove this stock
+    removeSymbolFromState(symbol).then(response=>{
+      socket.emit('remove-event', {stock: symbol});
+    }).catch(err=>console.error(err));
   }
 
   // componentWillUnmount(){

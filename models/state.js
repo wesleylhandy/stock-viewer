@@ -5,9 +5,19 @@ function StateDAO(collection) {
     this.collection = collection;
 }
 
-StateDAO.prototype.updateState = function(symbol, callback) {
+StateDAO.prototype.addToState = function(symbol, callback) {
     try {
-        this.collection.insertOne(symbol)
+        this.collection.insertOne({ symbol })
+    } catch (err) {
+        return callback(err, null)
+    }
+
+    callback(null, true);
+}
+
+StateDAO.prototype.removeFromState = function(symbol, callback) {
+    try {
+        this.collection.deleteOne({ symbol })
     } catch (err) {
         return callback(err, null)
     }

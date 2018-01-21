@@ -13,6 +13,14 @@ const stocks = (state = [], action) => {
             return [
                 ...state.filter(stock => stock.symbol !== action.symbol)
             ]
+        case 'UPDATE_STOCKS':
+            // compare stored state to database state and update store
+            const storedStocks = state.map(stock => stock.symbol);
+            const missingStocks = action.symbols.filter(symbol => !storedStocks.includes(symbol));
+            return [
+                ...state,
+                ...missingStocks
+            ]
         case 'UPDATE_STOCK_DATA':
             return [
                 ...state.map(stock => stock.symbol === action.symbol ? singleStock(stock, action) : stock)
