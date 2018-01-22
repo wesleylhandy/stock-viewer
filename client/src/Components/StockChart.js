@@ -14,25 +14,24 @@ const options = {
       distribution: 'series',
       bounds: 'data',
       ticks: {
-        source: 'auto'
+        source: 'labels'
       },
       time: {
         unit: 'month',
         minUnit: 'month',
         stepSize: 1,
-        displayFormats: {
-          month: 'MMM YYYY'
-        },
-        toolTipFormat: "MMM Do YYYY"
+        displayFormat: 'MMM YYYY'
       },
       scaleLabel: {
-        display: true
+        display: true,
+        labelString: 'Trading Days'
       }
     }],
     yAxes: [{
       display: true,
       scaleLabel: {
         display: true,
+        labelString:'Stock Price'
       },
       ticks: {
           suggestedMin: 5,
@@ -41,7 +40,7 @@ const options = {
     }]
   },
   tooltips: {
-    mode: 'index',
+    mode: 'x',
     intersect: false,
     bodySpacing: 5,
     titleSpacing: 3,
@@ -49,7 +48,7 @@ const options = {
     itemSort: function(a, b, data){ return a.y - b.y},
     callbacks: {
       title: function(tooltipItem, chart) {
-        return moment(tooltipItem.xLabel).format('MMM Do YYYY')
+        return moment(tooltipItem[0].xLabel, 'YYYY-MM-DD').format('MMM Do YYYY')
       }
     }
   },
@@ -64,18 +63,12 @@ export default class StockChart extends Component{
     super(props);
     this.state = {
       stocks: props.stocks,
-      labels: [],
       datasets: []
     }
     this.getStockData = this.getStockData.bind(this);
+    this.getLabels = this.getLabels.bind(this);
   }
-
   componentDidMount(){
-    const labels = [];
-    for (let i=11; i >= 0; i--){
-      labels.push(moment(this.props.date.currentDate).subtract(i, 'months').format('MMM YYYY'))
-    }
-    this.setState({labels})
 
     this.props.stocks.forEach((stock, ind, arr)=>{
       const color = `hsla(${((360 / arr.length) * ind) + 20}, 100%, 45%, 0.9)`
@@ -98,13 +91,20 @@ export default class StockChart extends Component{
       });
     }
   }
+  getLabels() {
+    const labels = [];
+    for (let i = 12; i >= 0; i--) {
+      labels.push(moment(this.props.date.currentDate, 'YYYY-MM-DD').subtract(i, 'months'))
+    }
+    return labels;
+  }
   getStockData(symbol, color) {
     fetch(`https://api.iextrading.com/1.0/stock/${symbol}/chart/1y`)
       .then(response => response.json())
       .then(json => {
         const data = json.map(stock=> {
           return {
-            x: new Date(moment(stock.date, 'YYYY-MM-DD')),
+            x: moment(stock.date, 'YYYY-MM-DD'),
             y: stock.close
           }
         })
@@ -127,7 +127,7 @@ export default class StockChart extends Component{
 
   render() {
     const data = {
-      labels: this.state.labels,
+      labels: this.getLabels(),
       datasets: this.state.datasets,
     }
     return (

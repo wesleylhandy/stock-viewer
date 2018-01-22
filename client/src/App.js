@@ -38,7 +38,7 @@ class App extends Component {
   }
 
   componentDidMount(){
-    this.props.addCurrentDate(moment())
+    this.props.addCurrentDate(moment().format('YYYY-MM-DD'))
     getState().then(response=>{
       const symbols = response.symbols;
       this.props.updateStocks(symbols);

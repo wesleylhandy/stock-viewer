@@ -3,16 +3,12 @@ import { createStore, compose } from 'redux';
 //import the root reducer
 import rootReducer from './reducers/index';
 
-// create an object for the default data
-import StateLoader from './StateLoader'
 
 const enhancers = compose(
   window.devToolsExtension ? window.devToolsExtension() : f => f
 )
 
-const stateLoader = new StateLoader();
-
-const store = createStore(rootReducer, stateLoader.loadState(), enhancers);
+const store = createStore(rootReducer, enhancers);
 
 if (module.hot) {
   module.hot.accept('./reducers/', () => {
