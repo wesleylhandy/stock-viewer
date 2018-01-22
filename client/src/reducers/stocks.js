@@ -1,8 +1,12 @@
+let storedStocks = [],
+    newStock = true,
+    updateStocks = true;
+
 const stocks = (state = [], action) => {
     switch (action.type) {
         case 'ADD_STOCK':
-            const storedStocks = state.map(stock => stock.symbol)
-            const newStock = !storedStocks.includes(action.symbol)
+            storedStocks = state.map(stock => stock.symbol)
+            newStock = !storedStocks.includes(action.symbol)
             if (newStock) {
                 return [
                     ...state,
@@ -19,12 +23,14 @@ const stocks = (state = [], action) => {
             ]
         case 'UPDATE_STOCKS':
             // compare stored state to database state and update store
-            const storedStocks = state.map(stock => stock.symbol);
-            const missingStocks = action.symbols.filter(symbol => !storedStocks.includes(symbol));
-            return [
-                ...state,
-                ...missingStocks
-            ]
+            storedStocks = state.map(stock => stock.symbol).sort().join('')
+            updateStocks = storedStocks !== action.symbols.sort().join('')
+            if (updateStocks) {
+                return [
+                    ...action.symbols.map(symbol => singleStock(null, { type: "ADD_STOCK", symbol }))
+                ]
+            } else return state;
+        case 'UPDATE_STOCK_COLOR':
         case 'UPDATE_STOCK_DATA':
             return [
                 ...state.map(stock => stock.symbol === action.symbol ? singleStock(stock, action) : stock)
@@ -38,11 +44,18 @@ const singleStock = (state = {}, action) => {
     switch (action.type) {
         case 'ADD_STOCK':
             return {
+                ...state,
                 symbol: action.symbol
             }
         case 'UPDATE_STOCK_DATA':
             return {
+                ...state,
                 data: [...action.data]
+            }
+        case "UPDATE_STOCK_COLOR":
+            return {
+                ...state,
+                color: action.color
             }
         default:
             return state;

@@ -38,5 +38,6 @@ const defaultState = {
     endDate: '',
     currentDate: ''
   },
-  stocks: []
+  stocks: [],
+  ticker: []
 }

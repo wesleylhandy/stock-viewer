@@ -31,7 +31,7 @@ main {
     box-shadow: 1px 1px 5px #3c3c3c;
     display: flex;
     flex-direction: row;
-    justify-content: left;
+    justify-content: space-around;
     flex-wrap: wrap;
     padding: 30px;
 }
@@ -45,10 +45,7 @@ main {
     padding: 20px;
     border: 1px solid #a7a7a7;
     box-shadow: 1px 1px 5px #3c3c3c;
-}
-
-.stock-card:nth-of-type(even){
-    margin-left: 5%;
+    margin-bottom: 20px;
 }
 
 .stock-card__info-group {
@@ -64,7 +61,7 @@ main {
 
 .stock-card__previous-price .price {
     font-weight: 600;
-    color: darkorange;
+    color: indigo;
 }
 
 .stock-card a {
@@ -81,7 +78,8 @@ main {
     color: darkgreen;
 }
 
-.stock-card .remove-btn, .stock-card .refresh-btn {
+.stock-card .remove-btn,
+.stock-card .refresh-btn {
     font-weight: 600;
     border: none;
     outline: none;
@@ -89,7 +87,6 @@ main {
     font-size: 16px;
     transition: all 250ms ease-in-out;
     position: absolute;
-
 }
 
 .stock-card .remove-btn {
@@ -114,7 +111,7 @@ main {
 }
 
 .refresh.loading {
-    animation: refresh-logo-spin infinite 3s linear;
+    animation: refresh-logo-spin infinite 1s linear;
 }
 
 @keyframes refresh-logo-spin {
@@ -131,7 +128,6 @@ main {
         width: 100%;
         margin: 20px auto;
     }
-
     .stock-card+.stock-card {
         margin-left: 0;
     }
@@ -181,7 +177,8 @@ main {
     padding-left: 10px;
 }
 
-.ticker__item--symbol, .stock-card__symbol {
+.ticker__item--symbol,
+.stock-card__symbol {
     color: navy;
     font-weight: 600;
 }

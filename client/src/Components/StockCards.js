@@ -8,11 +8,14 @@ export default class StockCards extends Component {
     super(props);
     this.state = {
       stocks: props.stocks,
-      stocksData: []
+      stocksData: [],
+      colorUpdate: false
     }
-    this.fetchStocksData = this.fetchStocksData.bind(this);      
+    this.fetchStocksData = this.fetchStocksData.bind(this);
+    this.getStockColor = this.getStockColor.bind(this);      
   }
   componentDidMount(){
+    this.setState({ stocks: this.props.stocks, colorUpdate: true })
     this.fetchStocksData(this.props.stocks);
   }
 
@@ -20,9 +23,18 @@ export default class StockCards extends Component {
     if (nextProps.stocks.length === 0) {
       return this.setState({stocks: [], stocksData: []})
     }
-    if (nextProps.stocks.join() !== this.state.stocks.join()) {
-      this.fetchStocksData(nextProps.stocks)
+    const newSymbols = nextProps.stocks.map(stock=> stock.symbol);
+    const oldSymbols = this.state.stocks.map(stock=> stock.symbol)
+    if (newSymbols.sort().join('') !== oldSymbols.sort().join('') || nextProps.stocks.length !== this.state.stocks.length) {
+      this.setState({stocks:nextProps.stocks, colorUpdate: true})
+      return this.fetchStocksData(nextProps.stocks)
     }
+    const newColors = nextProps.stocks.map(stock => stock.color);
+    const oldColors = this.state.stocks.map(stock => stock.color);
+    if (newColors.sort().join('') !== oldColors.sort().join('')) {
+      return this.setState({ stocks: nextProps.stocks, colorUpdate: true })
+    }
+    this.setState({colorUpdate: false})
   }
 
   fetchStocksData(stocks) {
@@ -37,8 +49,29 @@ export default class StockCards extends Component {
     }).catch(err=>console.error({fetchCompanyDataErr: err}))
   }
 
+  getStockColor(stocks, symbol){
+    const filtered = stocks.filter(stock => stock.symbol === symbol)
+    return filtered.length ? filtered[0].color : null
+  }
+
+  renderStockCards(stocks, stocksData, colorUpdate, props) {
+    return stocksData.map((stock, i) => {
+      const stockColor = this.getStockColor(stocks, stock.symbol)
+      return (
+        <StockCard
+          key={`card-${i}-${stock.symbol}`}
+          stock={stock}
+          color={stockColor}
+          {...props}
+        />
+      )
+    })
+  }
+
   render(){
-    return <div className='stock-cards'>{this.state.stocksData.map((stock, i)=><StockCard key={`card-${i}-${stock.symbol}`} stock={stock} {...this.props}/>)}</div>
+    return <div className='stock-cards'>
+      { this.renderStockCards(this.state.stocks, this.state.stocksData, this.state.colorUpdate, {...this.props}) }
+    </div>
   }
   
 }

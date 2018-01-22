@@ -15,7 +15,8 @@ export default class StockCard extends Component {
       latestPrice: 0.00,
       latestSource: '',
       latestTime: '',
-      stock: props.stock
+      stock: props.stock,
+      color: props.color
     }
     this.getLatestPrice = this.getLatestPrice.bind(this)
     this.handleRemove = this.handleRemove.bind(this)
@@ -24,6 +25,12 @@ export default class StockCard extends Component {
 
   componentDidMount() {
     this.getLatestPrice(this.props.stock.symbol)
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.color !== this.state.color) {
+      this.setState({color: nextProps.color})
+    }
   }
 
   getLatestPrice(symbol){
@@ -51,10 +58,13 @@ export default class StockCard extends Component {
   }
 
   render() {
+    const style = {
+      color: this.state.color
+    }
     return (
       <div className='stock-card'>
         <div className='stock-card__info-group'> 
-          <div className="stock-card__symbol">{this.state.stock.symbol}</div>
+          <div className="stock-card__symbol" style={style}>{this.state.stock.symbol}</div>
           <div className="stock-card__name">{this.state.stock.companyName}</div>
         </div>
         <div className='stock-card__info-group'>

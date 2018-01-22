@@ -27,6 +27,14 @@ export const updateStockData = (symbol, data) => {
     }
 }
 
+export const updateStockColor = (symbol, color) => {
+    return {
+        type: "UPDATE_STOCK_COLOR",
+        symbol,
+        color
+    }
+}
+
 export const addPreviousSession = date => {
     return {
         type: 'ADD_PREVIOUS_SESSION',
@@ -46,5 +54,12 @@ export const addSearchDates = (startDate, endDate) => {
         type: 'ADD_SEARCH_DATES',
         startDate,
         endDate
+    }
+}
+
+export const updateTicker = symbols => {
+    return {
+        type: 'UPDATE_TICKER',
+        symbols
     }
 }

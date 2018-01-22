@@ -11,17 +11,22 @@ const options = {
   scales: {
     xAxes: [{
       type: 'time',
-      time: {
-        unit: 'month',
-        displayFormats: {
-          month: 'MMM YYYY'
-        },
-        toolTipFormat: 'MMM Do YYYY'
-      },
       distribution: 'series',
       bounds: 'data',
       ticks: {
         source: 'auto'
+      },
+      time: {
+        unit: 'month',
+        minUnit: 'month',
+        stepSize: 1,
+        displayFormats: {
+          month: 'MMM YYYY'
+        },
+        toolTipFormat: "MMM Do YYYY"
+      },
+      scaleLabel: {
+        display: true
       }
     }],
     yAxes: [{
@@ -31,18 +36,26 @@ const options = {
       },
       ticks: {
           suggestedMin: 5,
-          suggestedMax: 1000
+          suggestedMax: 200
       }
     }]
   },
   tooltips: {
-    mode: 'x',
-    position: 'average',
-    callbacks : {
-      label: function(tooltipItem, data) {
-        return tooltipItem.xLabel
+    mode: 'index',
+    intersect: false,
+    bodySpacing: 5,
+    titleSpacing: 3,
+    position: 'nearest',
+    itemSort: function(a, b, data){ return a.y - b.y},
+    callbacks: {
+      title: function(tooltipItem, chart) {
+        return moment(tooltipItem.xLabel).format('MMM Do YYYY')
       }
     }
+  },
+  hover: {
+    mode: 'x',
+    intersect: true
   }
 }
 
@@ -63,8 +76,10 @@ export default class StockChart extends Component{
       labels.push(moment(this.props.date.currentDate).subtract(i, 'months').format('MMM YYYY'))
     }
     this.setState({labels})
+
     this.props.stocks.forEach((stock, ind, arr)=>{
       const color = `hsla(${((360 / arr.length) * ind) + 20}, 100%, 45%, 0.9)`
+      this.props.updateStockColor(stock.symbol, color);
       this.getStockData(stock.symbol, color)
     });
   }
@@ -72,10 +87,13 @@ export default class StockChart extends Component{
     if(nextProps.stocks.length === 0) {
       return this.setState({datasets: [], stocks: []})
     }
-    if(nextProps.stocks.join() !== this.state.stocks.join() || nextProps.stocks.length !== this.state.stocks.length) {
+    const newSymbols = nextProps.stocks.map(stock => stock.symbol);
+    const oldSymbols = this.state.stocks.map(stock => stock.symbol)
+    if (newSymbols.sort().join('') !== oldSymbols.sort().join('') || nextProps.stocks.length !== this.state.stocks.length) {
       this.setState({stocks: nextProps.stocks, datasets: []})
       nextProps.stocks.forEach((stock, ind, arr)=>{
         const color = `hsla(${((360 / arr.length) * ind) + 20}, 100%, 45%, 0.9)`
+        this.props.updateStockColor(stock.symbol, color);
         this.getStockData(stock.symbol, color)
       });
     }
@@ -90,7 +108,6 @@ export default class StockChart extends Component{
             y: stock.close
           }
         })
-        const labels = data.map(label => moment(label.x).format('MMM Do YYYY'));
         const datasets = this.state.datasets.slice();
         const dataset = {
           label: symbol,
@@ -104,27 +121,19 @@ export default class StockChart extends Component{
           pointRadius: 1
         }
         datasets.push(dataset);
-        this.setState({datasets, labels})
+        this.setState({datasets})
       })
   }
-  getData(e){
-    if(e.length) {
-      let values = e.map(el=>{return {datasetIndex: el._index, value: el._model.y}})
-      let chart = e[0]._chart;
-      let ctx = chart.ctx;
-      console.log({values})
-    }
-  }
+
   render() {
     const data = {
       labels: this.state.labels,
       datasets: this.state.datasets,
-      options: options
     }
-      return (
-        <div>
-          <Line data={data} getElementsAtEvent={this.getData} redraw/>
-        </div>
-      );
+    return (
+      <div>
+        <Line data={data} options={options} redraw/>
+      </div>
+    );
   }
 }
