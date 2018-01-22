@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
-import {Line, defaults} from 'react-chartjs-2';
+import {Line} from 'react-chartjs-2';
 
 import moment from 'moment';
-
-defaults.global.animation = false;
-defaults.global.showLines = false;
 
 const options = {
   responsive: true,
@@ -45,7 +42,7 @@ const options = {
     bodySpacing: 5,
     titleSpacing: 3,
     position: 'nearest',
-    itemSort: function(a, b, data){ return a.y - b.y},
+    itemSort: function(a, b){ return a.y - b.y},
     callbacks: {
       title: function(tooltipItem, chart) {
         return moment(tooltipItem[0].xLabel, 'YYYY-MM-DD').format('MMM Do YYYY')
@@ -55,7 +52,8 @@ const options = {
   hover: {
     mode: 'x',
     intersect: true
-  }
+  },
+  animation: false
 }
 
 export default class StockChart extends Component{
@@ -132,7 +130,7 @@ export default class StockChart extends Component{
     }
     return (
       <div>
-        <Line data={data} options={options} redraw/>
+        <Line data={data} options={options}/>
       </div>
     );
   }
