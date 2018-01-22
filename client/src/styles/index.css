@@ -26,6 +26,7 @@ main {
 .stock-cards {
     box-sizing: border-box;
     margin-top: 50px;
+    margin-bottom: 50px;
     border: 1px solid #a7a7a7;
     box-shadow: 1px 1px 5px #3c3c3c;
     display: flex;
@@ -37,11 +38,103 @@ main {
 
 .stock-card {
     box-sizing: border-box;
+    min-width: 280px;
+    max-width: 500px;
     width: 47.5%;
+    position: relative;
+    padding: 20px;
+    border: 1px solid #a7a7a7;
+    box-shadow: 1px 1px 5px #3c3c3c;
 }
 
 .stock-card:nth-of-type(even){
     margin-left: 5%;
+}
+
+.stock-card__info-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.stock-card__ceo {
+    margin-bottom: 10px;
+}
+
+.stock-card__previous-price .price {
+    font-weight: 600;
+    color: darkorange;
+}
+
+.stock-card a {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    margin: 10px auto;
+    color: seagreen;
+    transition: all 250ms ease-in-out;
+}
+
+.stock-card a:hover {
+    text-decoration: underline;
+    color: darkgreen;
+}
+
+.stock-card .remove-btn, .stock-card .refresh-btn {
+    font-weight: 600;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    transition: all 250ms ease-in-out;
+    position: absolute;
+
+}
+
+.stock-card .remove-btn {
+    right: 0;
+    top: 0;
+}
+
+.stock-card .refresh-btn {
+    left: 0;
+    top: 0;
+    transform: scale(1.0);
+}
+
+.stock-card .remove-btn:hover {
+    font-size: 20px;
+    color: #888888;
+}
+
+.stock-card .refresh-btn:hover {
+    fill: #888888;
+    transform: scale(1.2);
+}
+
+.refresh.loading {
+    animation: refresh-logo-spin infinite 3s linear;
+}
+
+@keyframes refresh-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .stock-card {
+        width: 100%;
+        margin: 20px auto;
+    }
+
+    .stock-card+.stock-card {
+        margin-left: 0;
+    }
 }
 
 .ticker-wrap {
@@ -88,7 +181,7 @@ main {
     padding-left: 10px;
 }
 
-.ticker__item--symbol {
+.ticker__item--symbol, .stock-card__symbol {
     color: navy;
     font-weight: 600;
 }

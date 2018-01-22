@@ -6,55 +6,51 @@ import moment from 'moment';
 defaults.global.animation = false;
 defaults.global.showLines = false;
 
+const options = {
+  responsive: true,
+  scales: {
+    xAxes: [{
+      type: 'time',
+      time: {
+        unit: 'month',
+        displayFormats: {
+          month: 'MMM YYYY'
+        },
+        toolTipFormat: 'MMM Do YYYY'
+      },
+      distribution: 'series',
+      bounds: 'data',
+      ticks: {
+        source: 'auto'
+      }
+    }],
+    yAxes: [{
+      display: true,
+      scaleLabel: {
+        display: true,
+      },
+      ticks: {
+          suggestedMin: 5,
+          suggestedMax: 1000
+      }
+    }]
+  },
+  tooltips: {
+    mode: 'x',
+    position: 'average',
+    callbacks : {
+      label: function(tooltipItem, data) {
+        return tooltipItem.xLabel
+      }
+    }
+  }
+}
+
 export default class StockChart extends Component{
   constructor(props){
     super(props);
     this.state = {
       stocks: props.stocks,
-      options: {
-        responsive: true,
-        scales: {
-          xAxes: [{
-            display: false,
-            type: 'time',
-            unit: 'day',
-            displayFormats: {
-              month: 'MMM D YYYY'
-            },
-            toolTipFormat: 'MMM D YYYY',
-            distribution: 'series',
-            bounds: 'data',
-            ticks: {
-              source: 'data'
-            },
-            scaleLabel: {
-              display: true,
-              labelString: 'Month'
-            }
-          }],
-          yAxes: [{
-            display: true,
-            scaleLabel: {
-              display: true,
-            },
-            ticks: {
-                suggestedMin: 5,
-                suggestedMax: 1000
-            }
-          }]
-        },
-        tooltips: {
-          mode: 'index',
-          axis: 'x',
-          intersect: false,
-          position: 'average',
-          callbacks : {
-            label: function(tooltipItem, data) {
-              return tooltipItem.xLabel
-            }
-          }
-        }
-      },
       labels: [],
       datasets: []
     }
@@ -94,7 +90,7 @@ export default class StockChart extends Component{
             y: stock.close
           }
         })
-        const labels = data.map(label => moment(label.x).format('MMMM YYYY'));
+        const labels = data.map(label => moment(label.x).format('MMM Do YYYY'));
         const datasets = this.state.datasets.slice();
         const dataset = {
           label: symbol,
@@ -112,7 +108,6 @@ export default class StockChart extends Component{
       })
   }
   getData(e){
-    console.log({e: e})
     if(e.length) {
       let values = e.map(el=>{return {datasetIndex: el._index, value: el._model.y}})
       let chart = e[0]._chart;
@@ -124,11 +119,11 @@ export default class StockChart extends Component{
     const data = {
       labels: this.state.labels,
       datasets: this.state.datasets,
-      options: this.state.options
+      options: options
     }
       return (
         <div>
-          <Line data={data} getElementsAtEvent={this.getData}/>
+          <Line data={data} getElementsAtEvent={this.getData} redraw/>
         </div>
       );
   }

@@ -1,10 +1,14 @@
 const stocks = (state = [], action) => {
     switch (action.type) {
         case 'ADD_STOCK':
-            return [
-                ...state,
-                singleStock(null, action)
-            ]
+            const storedStocks = state.map(stock => stock.symbol)
+            const newStock = !storedStocks.includes(action.symbol)
+            if (newStock) {
+                return [
+                    ...state,
+                    singleStock(null, action)
+                ]
+            } else return state;
         case 'REMOVE_STOCK':
             // console.log('RemoveStockReducer', action.symbol)
             // console.log({newState: [
